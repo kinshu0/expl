@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Trackers{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('tracker.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for tracker, logs in trackers.items() %}
+    <section class="post">
+      <header>
+        <div>
+          <h1>{{ tracker['target_name'] }}</h1>
+          <div class="about">by {{ tracker['username'] }} on {{ tracker['created'].strftime('%Y-%m-%d %H:%M:%S UTC') }}</div>
+        </div>
+        {#
+        {% if g.user['id'] == tracker['author_id'] %}
+          <a class="action" href="{{ url_for('tracker.update', id=tracker['id']) }}">Edit</a>
+        {% endif %} #}
+      </header>
+      <h5>Tracker URL ID: /l/{{ tracker['id'] }}</h5>
+      <table>
+        {% for log in logs %}
+          <tr>
+            <td>{{ log['ip_address'] }}</td>
+            <td>{{ log['accessed'].strftime('%Y-%m-%d %H:%M:%S UTC') }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+      {#
+      <li>
+          {% for log in logs %}
+            <ul>{{log['ip_address']}} | log['accessed'].strftime('%Y-%m-%d-%h-%m-%s')</ul>
+          {% endfor %}
+      </li>
+      <!-- <p class="body">{{ post['body'] }}</p> -->#}
+
+    </section>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
